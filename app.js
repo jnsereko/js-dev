@@ -8,35 +8,26 @@ process.argv.slice(2).reduce((processArgs, val) => {
     }, {})
 
 if(command === '--filter'){ // user entered --filter
-    /*
-    This is really an overkill.  I tried using filters but recursive calling of the filter didnt allow me update the object
-    Using native and manual for-loops could arithemetically work, but i think Javascript locks up when i try to maintain the for-loop-counter variable after
-    deleting the empty objects form the array.
-    */
-    for (let k = 0; k < data.length; k++) { 
-        const country = data[k];
-        
+    for (const [index, country] of data.entries()) { 
         for (let j = 0; j < country.people.length; j++) {
             const person = country.people[j];
 
-            for (let i = 0; i < person.animals.length; i++) {
-                const animal = person.animals[i];
-                if(!(animal.name.includes(commandVal))){
-                    person.animals.splice(i, 1); 
-                    i = i - 1;
-                }
-            }
+            // filter animals array to match those having a word commandVal in their name values.
+            person.animals = person.animals.filter(animalName =>{
+                return animalName.name.includes(commandVal)
+            })
             if(person.animals === undefined || person.animals.length == 0){
-                country.people.slice(j, 1)
-                j = j - 1;
+                // if the animals list is empty, delete the whole object at this index
+                country.people.splice(j,1)
+                j = j - 1 // after deletion, keep the counter value constant.  This was a difficult catch
             }
-        }
-        if(country.people === undefined || country.people.length == 0){
-            country.people.slice(k, 1)
-            k = k - 1;
         }
     };
-    console.log(JSON.stringify(data, null, 1)) // transform data into a JSON object to view each content 
+
+    let information = data.filter(element => { //filter the array again to remove empty people arrays
+        return(element.people !== undefined && element.people.length > 0)
+    })
+    console.log(JSON.stringify(information, null, 1)) // transform data into a JSON object to view each content 
 
 }else if(command === '--count'){ //user entered --count
     var countryCount = 1, peopleCount = 1;
