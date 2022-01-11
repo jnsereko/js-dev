@@ -9,6 +9,7 @@ process.argv.slice(2).reduce((processArgs, val) => {
 
 if(command === '--filter'){ // user entered --filter
     for (const [index, country] of data.entries()) { 
+        
         for (let j = 0; j < country.people.length; j++) {
             const person = country.people[j];
 
@@ -16,6 +17,7 @@ if(command === '--filter'){ // user entered --filter
             person.animals = person.animals.filter(animalName =>{
                 return animalName.name.includes(commandVal)
             })
+        
             if(person.animals === undefined || person.animals.length == 0){
                 // if the animals list is empty, delete the whole object at this index
                 country.people.splice(j,1)
@@ -31,18 +33,25 @@ if(command === '--filter'){ // user entered --filter
 
 }else if(command === '--count'){ //user entered --count
     var countryCount = 1, peopleCount = 1;
+    
     data.filter(element => {
-
         let countryName = element.name
+        
         switch(countryName) { 
             //initiate counter of people each new country
-            case "Tohabdal": case "Uzuzozne": case "Zuhackog": case "Satanwi":
+            case "Tohabdal": 
+            case "Uzuzozne": 
+            case "Zuhackog": 
+            case "Satanwi":
                 peopleCount = 1;
         }
         countryName = countryName + ' [' + countryCount++ + ']';
+        
         element.people.filter(person =>{
             person.name = person.name + ' [' + peopleCount++ + ']';
         })
     });
     console.log(JSON.stringify(data, null, 1));
-} else console.log('invald input accepted is --field and --count')
+} else {
+    console.log('invald input accepted is --field and --count')
+}
