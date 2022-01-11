@@ -32,7 +32,14 @@ if(command === '--filter'){ // user entered --filter
 }else if(command === '--count'){ //user entered --count
     var countryCount = 1, peopleCount = 1;
     data.filter(element => {
-        element.name = element.name + ' [' + countryCount++ + ']';
+
+        let countryName = element.name
+        switch(countryName) { 
+            //initiate counter of people each new country
+            case "Tohabdal": case "Uzuzozne": case "Zuhackog": case "Satanwi":
+                peopleCount = 1;
+        }
+        countryName = countryName + ' [' + countryCount++ + ']';
         element.people.filter(person =>{
             person.name = person.name + ' [' + peopleCount++ + ']';
         })
